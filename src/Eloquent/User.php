@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
+use Pollen\WpDb\WpDbProxy;
 
 /**
  * @property-read int $ID
@@ -28,11 +29,14 @@ use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
  */
 class User extends Model
 {
+    use WpDbProxy;
+
     /**
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
     {
+        $this->connection = $this->wpDb()->mainConnexion();
         $this->primaryKey = 'ID';
         $this->table = 'users';
 
@@ -54,32 +58,38 @@ class User extends Model
             $this->casts
         );
 
-        /* * /
         $this->appends = array_merge(
-            [
-                'admin_color',
-                'comment_shortcuts',
-                'community_events_location',
-                'description',
-                'firstname',
-                'lastname',
-                'locale',
-                'nickname',
-                'primary_blog',
-                'rich_editing',
-                'syntax_highlighting',
-                'show_admin_bar_front',
-                'show_welcome_panel',
-                'source_domain',
-                'role',
-                'roles',
-                'use_ssl',
-            ],
+            static::metaAttributes(),
             $this->appends
         );
-        /**/
 
         parent::__construct($attributes);
+    }
+
+    /**
+     * @return array
+     */
+    public static function metaAttributes(): array
+    {
+        return [
+            'admin_color',
+            'comment_shortcuts',
+            'community_events_location',
+            'description',
+            'firstname',
+            'lastname',
+            'locale',
+            'nickname',
+            'primary_blog',
+            'rich_editing',
+            'syntax_highlighting',
+            'show_admin_bar_front',
+            'show_welcome_panel',
+            'source_domain',
+            'role',
+            'roles',
+            'use_ssl',
+        ];
     }
 
     /**
@@ -111,7 +121,7 @@ class User extends Model
      */
     public function getCommentShortcutsAttribute(): bool
     {
-        return ($e = $this->metas->where('meta_key', 'comment_shortcuts')->first()) ? (bool)$e->meta_value : false;
+        return (($e = $this->metas->where('meta_key', 'comment_shortcuts')->first())) && $e->meta_value;
     }
 
     /**
@@ -175,7 +185,7 @@ class User extends Model
      */
     public function getRichEditingAttribute(): bool
     {
-        return ($e = $this->metas->where('meta_key', 'rich_editing')->first()) ? (bool)$e->meta_value : false;
+        return (($e = $this->metas->where('meta_key', 'rich_editing')->first())) && $e->meta_value;
     }
 
     /**
@@ -204,7 +214,7 @@ class User extends Model
      */
     public function getSyntaxHighlightingAttribute(): bool
     {
-        return ($e = $this->metas->where('meta_key', 'syntax_highlighting')->first()) ? (bool)$e->meta_value : false;
+        return (($e = $this->metas->where('meta_key', 'syntax_highlighting')->first())) && $e->meta_value;
     }
 
     /**
@@ -212,7 +222,7 @@ class User extends Model
      */
     public function getShowAdminBarFrontAttribute(): bool
     {
-        return ($e = $this->metas->where('meta_key', 'show_admin_bar_front')->first()) ? (bool)$e->meta_value : false;
+        return (($e = $this->metas->where('meta_key', 'show_admin_bar_front')->first())) && $e->meta_value;
     }
 
     /**
@@ -220,7 +230,7 @@ class User extends Model
      */
     public function getShowWelcomePanelAttribute(): bool
     {
-        return ($e = $this->metas->where('meta_key', 'show_welcome_panel')->first()) ? (bool)$e->meta_value : false;
+        return (($e = $this->metas->where('meta_key', 'show_welcome_panel')->first())) && $e->meta_value;
     }
 
     /**
@@ -236,7 +246,7 @@ class User extends Model
      */
     public function getUseSslAttribute(): bool
     {
-        return ($e = $this->metas->where('meta_key', 'use_ssl')->first()) ? (bool)$e->meta_value : false;
+        return (($e = $this->metas->where('meta_key', 'use_ssl')->first())) && $e->meta_value;
     }
 
     /**

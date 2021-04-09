@@ -6,7 +6,6 @@ namespace Pollen\WpDb\Eloquent\Casts;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use Pollen\Support\Arr;
 use Pollen\Support\Str;
 
 class TypeCast implements CastsAttributes
@@ -25,7 +24,7 @@ class TypeCast implements CastsAttributes
             return (int)$value;
         }
 
-        if ($value === 'true' || $value === 'false') {
+        if ($value === 'true' || $value === 'false' || $value === 'yes' || $value === 'no') {
             return filter_var($value, FILTER_VALIDATE_BOOLEAN);
         }
 

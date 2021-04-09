@@ -14,7 +14,7 @@ class DateTimezoneCast implements CastsAttributes
     /**
      * @param Model $model
      * @param string $key
-     * @param Carbon $value
+     * @param string $value
      * @param array $attributes
      *
      * @return string
@@ -32,7 +32,7 @@ class DateTimezoneCast implements CastsAttributes
     /**
      * @param Model $model
      * @param string $key
-     * @param Carbon $value
+     * @param string $value
      * @param array $attributes
      *
      * @return string

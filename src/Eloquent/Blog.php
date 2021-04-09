@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
+use Pollen\WpDb\WpDbProxy;
 
 /**
  * @property-read int $blog_id
@@ -27,11 +28,14 @@ use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
  */
 class Blog extends Model
 {
+    use WpDbProxy;
+
     /**
-     * @param array $attributes
+     * @inerhitDoc
      */
     public function __construct(array $attributes = [])
     {
+        $this->connection = $this->wpDb()->mainConnexion();
         $this->primaryKey = 'blog_id';
         $this->table = 'blogs';
 

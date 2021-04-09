@@ -13,3 +13,65 @@ composer require pollen-solutions/wp-db
 ```
 
 ## Basic Usage
+
+### User
+
+#### Standard (with formatted meta-attributes appends)
+
+```php
+use Pollen\WpDb\Eloquent\User;
+
+$users = User::on()->limit(10)->get();
+try {
+    $data = json_encode($users->toArray(), JSON_THROW_ON_ERROR);
+} catch (\Throwable $e ) {
+    $data = $e->getMessage();
+}
+echo $data;
+```
+
+#### Include all non formatted metadatas
+
+```php
+use Pollen\WpDb\Eloquent\User;
+
+$users = User::on()->with('metas')->limit(10)->get();
+try {
+    $data = json_encode($users->toArray(), JSON_THROW_ON_ERROR);
+} catch (\Throwable $e ) {
+    $data = $e->getMessage();
+}
+echo $data;
+```
+
+#### With formatted meta-attributes disabled
+
+```php
+use Pollen\WpDb\Eloquent\User;
+
+$users = User::on()->limit(10)->get();
+try {
+    $data = json_encode($users->makeHidden(User::metaAttributes())->toArray(), JSON_THROW_ON_ERROR);
+} catch (\Throwable $e ) {
+    $data = $e->getMessage();
+}
+echo $data;
+
+```
+
+#### With all related posts (not recommended)
+
+Major resource consumer, bad practice ...
+
+```php
+use Pollen\WpDb\Eloquent\User;
+
+$users = User::on()->with('posts')->find(1);
+try {
+    $data = json_encode($users->toArray(), JSON_THROW_ON_ERROR);
+} catch (\Throwable $e ) {
+    $data = $e->getMessage();
+}
+echo $data;
+
+```

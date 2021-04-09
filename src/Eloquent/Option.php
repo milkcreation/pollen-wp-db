@@ -7,6 +7,7 @@ namespace Pollen\WpDb\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Pollen\WpDb\Eloquent\Casts\TypeCast;
 use Pollen\WpDb\Eloquent\Casts\YesNoCast;
+use Pollen\WpDb\WpDbProxy;
 
 /**
  * @property-read int $option_id
@@ -16,6 +17,8 @@ use Pollen\WpDb\Eloquent\Casts\YesNoCast;
  */
 class Option extends Model
 {
+    use WpDbProxy;
+
     /**
      * @param array $attributes
      */

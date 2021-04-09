@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Pollen\WpDb\WpDbProxy;
 
 /**
  * @property-read int $term_id
@@ -19,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Term extends Model
 {
+    use WpDbProxy;
+
     /**
      * @param array $attributes
      */

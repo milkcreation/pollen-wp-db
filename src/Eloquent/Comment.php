@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
+use Pollen\WpDb\WpDbProxy;
 
 /**
  * @property-read int $comment_ID
@@ -32,6 +33,8 @@ use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
  */
 class Comment extends Model
 {
+    use WpDbProxy;
+
     /**
      * @param array $attributes
      */

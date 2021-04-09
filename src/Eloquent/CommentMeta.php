@@ -7,6 +7,7 @@ namespace Pollen\WpDb\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Pollen\WpDb\Eloquent\Casts\TypeCast;
+use Pollen\WpDb\WpDbProxy;
 
 /**
  * @property-read int $meta_id
@@ -17,6 +18,8 @@ use Pollen\WpDb\Eloquent\Casts\TypeCast;
  */
 class CommentMeta extends Model
 {
+    use WpDbProxy;
+
     /**
      * @param array $attributes
      */
