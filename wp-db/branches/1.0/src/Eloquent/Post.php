@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
+use Pollen\WpDb\WpDbProxy;
 
 /**
  * @property-read int $ID
@@ -45,6 +46,8 @@ use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
  */
 class Post extends Model
 {
+    use WpDbProxy;
+
     /**
      * @param array $attributes
      */

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Pollen\WpDb\Eloquent\Casts\TypeCast;
+use Pollen\WpDb\WpDbProxy;
 
 /**
  * @property-read int $meta_id
@@ -18,6 +19,8 @@ use Pollen\WpDb\Eloquent\Casts\TypeCast;
  */
 class TermMeta extends Model
 {
+    use WpDbProxy;
+
     /**
      * @param array $attributes
      */

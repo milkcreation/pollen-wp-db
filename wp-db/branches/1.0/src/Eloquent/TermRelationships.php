@@ -6,6 +6,7 @@ namespace Pollen\WpDb\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Pollen\WpDb\WpDbProxy;
 
 /**
  * @property int $object_id
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class TermRelationships extends Model
 {
+    use WpDbProxy;
+
     /**
      * @param array $attributes
      */

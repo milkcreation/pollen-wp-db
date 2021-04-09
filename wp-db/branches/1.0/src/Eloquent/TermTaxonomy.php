@@ -6,6 +6,7 @@ namespace Pollen\WpDb\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Pollen\WpDb\WpDbProxy;
 
 /**
  * @property-read int $term_taxonomy_id
@@ -18,6 +19,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class TermTaxonomy extends Model
 {
+    use WpDbProxy;
+
     /**
      * @param array $attributes
      */
