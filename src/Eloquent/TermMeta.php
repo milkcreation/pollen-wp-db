@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Pollen\WpDb\Eloquent;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Pollen\WpDb\Eloquent\Casts\TypeCast;
 use Pollen\WpDb\WpDbProxy;
@@ -17,7 +15,7 @@ use Pollen\WpDb\WpDbProxy;
  * @property mixed $meta_value
  * @property Term $term
  */
-class TermMeta extends Model
+class TermMeta extends AbstractModel
 {
     use WpDbProxy;
 

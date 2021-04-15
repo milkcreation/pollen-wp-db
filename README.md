@@ -75,3 +75,78 @@ try {
 echo $data;
 
 ```
+
+#### Role contraints
+
+##### Global scope
+
+```php
+namespace App\Model;
+
+use Pollen\WpDb\Eloquent\User;
+
+class Administrator extends User
+{
+    public $userRoleScope = 'administrator';
+}
+
+$admins = Administrator::on()->limit(10)->get();
+try {
+    $data = json_encode($admins->toArray(), JSON_THROW_ON_ERROR);
+} catch (\Throwable $e ) {
+    $data = $e->getMessage();
+}
+echo $data;
+
+```
+
+##### Dynamic scope 
+
+```php
+use Pollen\WpDb\Eloquent\User;
+
+$users = User::on()->role('administrator')->limit(10)->get();
+try {
+    $data = json_encode($users->toArray(), JSON_THROW_ON_ERROR);
+} catch (\Throwable $e ) {
+    $data = $e->getMessage();
+}
+echo $data;
+
+```
+
+#### Blog contraints
+
+##### Global scope
+
+```php
+use Pollen\WpDb\Eloquent\User;
+
+User::setBlogScope(2);
+
+$users = User::on()->role('administrator')->limit(10)->get();
+try {
+    $data = json_encode($users->toArray(), JSON_THROW_ON_ERROR);
+} catch (\Throwable $e ) {
+    $data = $e->getMessage();
+}
+echo $data;
+
+User::resetBlogScope();
+
+```
+
+##### Dynamic scope
+
+```php
+use Pollen\WpDb\Eloquent\User;
+
+$users = User::on()->blog(2)->limit(10)->get();
+try {
+    $data = json_encode($users->toArray(), JSON_THROW_ON_ERROR);
+} catch (\Throwable $e ) {
+    $data = $e->getMessage();
+}
+echo $data;
+
+```

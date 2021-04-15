@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pollen\WpDb\Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Pollen\WpDb\WpDbProxy;
 
@@ -15,7 +14,7 @@ use Pollen\WpDb\WpDbProxy;
  * @property Post $post
  * @property TermTaxonomy $taxonomy
  */
-class TermRelationships extends Model
+class TermRelationships extends AbstractModel
 {
     use WpDbProxy;
 
