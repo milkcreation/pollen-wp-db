@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Pollen\WpDb\Eloquent;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
-use Pollen\WpDb\WpDbProxy;
+use Pollen\WpDb\Eloquent\Scopes\PostTypeScope;
 
 /**
  * @property-read int $ID
@@ -43,10 +43,18 @@ use Pollen\WpDb\WpDbProxy;
  * @property Collection $metas
  * @property Post $parent
  * @property Collection $taxonomies
+ *
+ * @method Builder|static published()
+ * @method Builder|static status(string|array $status)
+ * @method Builder|static type(string|array $type)
  */
-class Post extends Model
+class Post extends AbstractModel
 {
-    use WpDbProxy;
+    /**
+     * Contrainte de type(s) de post.
+     * @var string|string[]
+     */
+    public $postTypeScope = '';
 
     /**
      * @param array $attributes
@@ -88,18 +96,32 @@ class Post extends Model
     }
 
     /**
+     * @inheritDoc
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new PostTypeScope());
+    }
+
+    /**
      * @return array
      */
     public function getTermsAttribute(): array
     {
-        return $this->taxonomies->groupBy(function ($taxonomy) {
-            return $taxonomy->taxonomy === 'post_tag' ?
-                'tag' : $taxonomy->taxonomy;
-        })->map(function ($group) {
-            return $group->mapWithKeys(function ($item) {
-                return [$item->term->slug => $item->term->toArray()];
-            });
-        })->toArray();
+        return $this->taxonomies->groupBy(
+            function ($taxonomy) {
+                return $taxonomy->taxonomy === 'post_tag' ?
+                    'tag' : $taxonomy->taxonomy;
+            }
+        )->map(
+            function ($group) {
+                return $group->mapWithKeys(
+                    function ($item) {
+                        return [$item->term->slug => $item->term->toArray()];
+                    }
+                );
+            }
+        )->toArray();
     }
 
     /**
@@ -126,7 +148,6 @@ class Post extends Model
         return $this->hasMany(PostMeta::class, 'post_id');
     }
 
-
     /**
      * @return BelongsTo
      */
@@ -146,5 +167,66 @@ class Post extends Model
             'object_id',
             'term_taxonomy_id'
         );
+    }
+
+    /**
+     * Limite la portée de la requête au posts publiés.
+     * {@internal Intégre aussi les publications à venir.}
+     *
+     * @param Builder $query
+     *
+     * @return Builder
+     */
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where(function ($query) {
+            $query->where('post_status', 'publish');
+            $query->orWhere(function ($query) {
+                $query->where('post_status', 'future');
+                $query->where('post_date', '<=', Carbon::now()->format('Y-m-d H:i:s'));
+            });
+        });
+    }
+
+    /**
+     * Limite la portée de la requête à un statut particulier.
+     *
+     * @param Builder $query
+     * @param string|array $status
+     *
+     * @return Builder
+     */
+    public function scopeStatus(Builder $query, $status): Builder
+    {
+        if (is_array($status)) {
+            return $query->whereIn('post_status', $status);
+        }
+
+        if (is_string($status)) {
+            return $query->where('post_status', $status);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Limite la portée de la requête à un type de post particulier.
+     *
+     * @param Builder $query
+     * @param string|array $type
+     *
+     * @return Builder
+     */
+    public function scopeType(Builder $query, $type): Builder
+    {
+        if (is_array($type)) {
+            return $query->whereIn('post_type', $type);
+        }
+
+        if (is_string($type)) {
+            return $query->where('post_type', $type);
+        }
+
+        return $query;
     }
 }

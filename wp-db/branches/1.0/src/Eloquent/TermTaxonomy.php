@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Pollen\WpDb\Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Pollen\WpDb\Eloquent\Scopes\TaxonomyScope;
 use Pollen\WpDb\WpDbProxy;
 
 /**
@@ -17,9 +17,15 @@ use Pollen\WpDb\WpDbProxy;
  * @property int $count
  * @property Term $term
  */
-class TermTaxonomy extends Model
+class TermTaxonomy extends AbstractModel
 {
     use WpDbProxy;
+
+    /**
+     * Contrainte de taxnomomie(s).
+     * @var string|string[]
+     */
+    public $taxonomyScope = '';
 
     /**
      * @param array $attributes
@@ -43,6 +49,14 @@ class TermTaxonomy extends Model
         );
 
         parent::__construct($attributes);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new TaxonomyScope());
     }
 
     /**

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pollen\WpDb\Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
 use Pollen\WpDb\Eloquent\Casts\TypeCast;
 use Pollen\WpDb\Eloquent\Casts\YesNoCast;
 use Pollen\WpDb\WpDbProxy;
@@ -15,7 +14,7 @@ use Pollen\WpDb\WpDbProxy;
  * @property mixed $option_value
  * @property bool $autoload
  */
-class Option extends Model
+class Option extends AbstractModel
 {
     use WpDbProxy;
 

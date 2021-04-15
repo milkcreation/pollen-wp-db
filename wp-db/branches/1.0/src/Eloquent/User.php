@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Pollen\WpDb\Eloquent;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Pollen\Support\Arr;
 use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
+use Pollen\WpDb\Eloquent\Scopes\UserBlogScope;
+use Pollen\WpDb\Eloquent\Scopes\UserRoleScope;
 use Pollen\WpDb\WpDbProxy;
 
 /**
@@ -26,10 +29,25 @@ use Pollen\WpDb\WpDbProxy;
  * @property bool $deleted
  * @property Collection $metas
  * @property Collection $posts
+ *
+ * @method Builder|static blog(int $blog)
+ * @method Builder|static role(string|array $roles)
  */
-class User extends Model
+class User extends AbstractModel
 {
     use WpDbProxy;
+
+    /**
+     * Contrainte de site du réseau.
+     * @var int|null $blogScope
+     */
+    public static $blogScope;
+
+    /**
+     * Contrainte de role(s).
+     * @var string|string[]
+     */
+    public $userRoleScope = '';
 
     /**
      * @param array $attributes
@@ -64,6 +82,15 @@ class User extends Model
         );
 
         parent::__construct($attributes);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new UserRoleScope());
+        static::addGlobalScope(new UserBlogScope());
     }
 
     /**
@@ -113,7 +140,7 @@ class User extends Model
      */
     public function getAdminColorAttribute(): string
     {
-        return ($e = $this->metas->where('meta_key', 'admin_color')->first()) ? $e->meta_value : '';
+        return ($e = $this->metas->where('meta_key', 'admin_color')->first()) ? (string)$e->meta_value : '';
     }
 
     /**
@@ -129,7 +156,8 @@ class User extends Model
      */
     public function getCommunityEventsLocationAttribute(): array
     {
-        return ($e = $this->metas->where('meta_key', 'community-events-location')->first()) ? $e->meta_value : [];
+        return ($e = $this->metas->where('meta_key', 'community-events-location')->first(
+        )) ? (array)$e->meta_value : [];
     }
 
     /**
@@ -137,7 +165,7 @@ class User extends Model
      */
     public function getDescriptionAttribute(): string
     {
-        return ($e = $this->metas->where('meta_key', 'description')->first()) ? $e->meta_value : '';
+        return ($e = $this->metas->where('meta_key', 'description')->first()) ? (string)$e->meta_value : '';
     }
 
     /**
@@ -145,7 +173,7 @@ class User extends Model
      */
     public function getFirstnameAttribute(): string
     {
-        return ($e = $this->metas->where('meta_key', 'first_name')->first()) ? $e->meta_value : '';
+        return ($e = $this->metas->where('meta_key', 'first_name')->first()) ? (string)$e->meta_value : '';
     }
 
     /**
@@ -153,7 +181,7 @@ class User extends Model
      */
     public function getLastnameAttribute(): string
     {
-        return ($e = $this->metas->where('meta_key', 'last_name')->first()) ? $e->meta_value : '';
+        return ($e = $this->metas->where('meta_key', 'last_name')->first()) ? (string)$e->meta_value : '';
     }
 
     /**
@@ -161,7 +189,7 @@ class User extends Model
      */
     public function getLocaleAttribute(): string
     {
-        return ($e = $this->metas->where('meta_key', 'locale')->first()) ? $e->meta_value : '';
+        return ($e = $this->metas->where('meta_key', 'locale')->first()) ? (string)$e->meta_value : '';
     }
 
     /**
@@ -169,7 +197,7 @@ class User extends Model
      */
     public function getNicknameAttribute(): string
     {
-        return ($e = $this->metas->where('meta_key', 'nickname')->first()) ? $e->meta_value : '';
+        return ($e = $this->metas->where('meta_key', 'nickname')->first()) ? (string)$e->meta_value : '';
     }
 
     /**
@@ -206,7 +234,7 @@ class User extends Model
     {
         $roleKey = $this->getConnection()->getTablePrefix() . 'capabilities';
 
-        return ($e = $this->metas->where('meta_key', $roleKey)->first()) ? $e->meta_value : [];
+        return ($e = $this->metas->where('meta_key', $roleKey)->first()) ? (array)$e->meta_value : [];
     }
 
     /**
@@ -238,7 +266,7 @@ class User extends Model
      */
     public function getSourceDomainAttribute(): string
     {
-        return ($e = $this->metas->where('meta_key', 'source_domain')->first()) ? $e->meta_value : '';
+        return ($e = $this->metas->where('meta_key', 'source_domain')->first()) ? (string)$e->meta_value : '';
     }
 
     /**
@@ -263,5 +291,81 @@ class User extends Model
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'post_author');
+    }
+
+    /**
+     * Réinitialisation de l'identifiant de qualification de contrainte de site du réseau.
+     *
+     * @return void
+     */
+    public static function resetBlogScope(): void
+    {
+        static::$blogScope = null;
+    }
+
+    /**
+     * Définition de l'identifiant de qualification de contrainte d'un site du réseau
+     *
+     * @param int $blog
+     *
+     * @return void
+     */
+    public static function setBlogScope(int $blog): void
+    {
+        static::$blogScope = $blog;
+    }
+
+    /**
+     * Limite la portée de la requête a l'identifiant de qualification d'un site du réseau.
+     *
+     * @param Builder $query
+     * @param int $blog
+     *
+     * @return Builder
+     */
+    public function scopeBlog(Builder $query, int $blog): Builder
+    {
+        $query->withoutGlobalScope(UserBlogScope::class);
+
+        $prefix = $this->getConnection()->getTablePrefix();
+        if (($blog !== 1) && ($blog !== 0)) {
+            $prefix .= $blog . '_';
+        }
+
+        $query->whereHas('metas', function (Builder $builder) use ($prefix) {
+            $builder->where('meta_key', "{$prefix}capabilities");
+        });
+
+        return $query;
+    }
+
+    /**
+     * Limite la portée de la requête a un role.
+     *
+     * @param Builder $query
+     * @param string|array $roles
+     *
+     * @return Builder
+     */
+    public function scopeRole(Builder $query, $roles): Builder
+    {
+        if (is_string($roles)) {
+            $roles = Arr::wrap($roles);
+        }
+
+        if (is_array($roles)) {
+            $query->whereHas('metas', function (Builder $builder) use ($roles) {
+                $builder->where(function (Builder $builder) use ($roles) {
+                    $or = false;
+                    foreach ($roles as $role) {
+                        $or ? $builder->orWhere('meta_value', 'LIKE', "%$role%")
+                            : $builder->where('meta_value', 'LIKE', "%$role%");
+                        $or = true;
+                    }
+                });
+            });
+        }
+
+        return $query;
     }
 }

@@ -6,7 +6,6 @@ namespace Pollen\WpDb\Eloquent;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
@@ -31,7 +30,7 @@ use Pollen\WpDb\WpDbProxy;
  * @property Post $post
  * @property User $user
  */
-class Comment extends Model
+class Comment extends AbstractModel
 {
     use WpDbProxy;
 
