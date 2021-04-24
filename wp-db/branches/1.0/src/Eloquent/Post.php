@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
 use Pollen\WpDb\Eloquent\Scopes\PostTypeScope;
 
 /**
@@ -68,8 +67,8 @@ class Post extends AbstractModel
             [
                 'ID'                    => 'integer',
                 'post_author'           => 'integer',
-                'post_date'             => DateTimezoneCast::class,
-                'post_date_gmt'         => DateTimezoneCast::class,
+                'post_date'             => 'datetime',
+                'post_date_gmt'         => 'datetime',
                 'post_content'          => 'string',
                 'post_title'            => 'string',
                 'post_excerpt'          => 'string',
@@ -80,8 +79,8 @@ class Post extends AbstractModel
                 'post_name'             => 'string',
                 'to_ping'               => 'boolean',
                 'pinged'                => 'boolean',
-                'post_modified'         => DateTimezoneCast::class,
-                'post_modified_gmt'     => DateTimezoneCast::class,
+                'post_modified'         => 'datetime',
+                'post_modified_gmt'     => 'datetime',
                 'post_content_filtered' => 'string',
                 'post_parent'           => 'integer',
                 'guid'                  => 'string',

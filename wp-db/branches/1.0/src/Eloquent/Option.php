@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Pollen\WpDb\Eloquent;
 
-use Pollen\WpDb\Eloquent\Casts\TypeCast;
-use Pollen\WpDb\Eloquent\Casts\YesNoCast;
+use Pollen\Database\Drivers\Laravel\Eloquent\Casts\TypeCast;
+use Pollen\Database\Drivers\Laravel\Eloquent\Casts\YesNoCast;
 use Pollen\WpDb\WpDbProxy;
 
 /**
