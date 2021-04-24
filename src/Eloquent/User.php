@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Pollen\Support\Arr;
-use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
 use Pollen\WpDb\Eloquent\Scopes\UserBlogScope;
 use Pollen\WpDb\Eloquent\Scopes\UserRoleScope;
 use Pollen\WpDb\WpDbProxy;
@@ -66,7 +65,7 @@ class User extends AbstractModel
                 'user_nicename'       => 'string',
                 'user_email'          => 'string',
                 'user_url'            => 'string',
-                'user_registered'     => DateTimezoneCast::class,
+                'user_registered'     => 'datetime',
                 'user_activation_key' => 'string',
                 'user_status'         => 'boolean',
                 'display_name'        => 'string',

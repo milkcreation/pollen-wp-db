@@ -7,7 +7,6 @@ namespace Pollen\WpDb\Eloquent;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
 use Pollen\WpDb\WpDbProxy;
 
 /**
@@ -44,8 +43,8 @@ class Blog extends AbstractModel
                 'site_id'      => 'integer',
                 'domain'       => 'string',
                 'path'         => 'string',
-                'registered'   => DateTimezoneCast::class,
-                'last_updated' => DateTimezoneCast::class,
+                'registered'   => 'datetime',
+                'last_updated' => 'datetime',
                 'public'       => 'boolean',
                 'archives'     => 'boolean',
                 'mature'       => 'boolean',

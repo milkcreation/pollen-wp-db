@@ -8,7 +8,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Pollen\WpDb\Eloquent\Casts\DateTimezoneCast;
 use Pollen\WpDb\WpDbProxy;
 
 /**
@@ -50,8 +49,8 @@ class Comment extends AbstractModel
                 'comment_author_email' => 'string',
                 'comment_author_url'   => 'string',
                 'comment_author_IP'    => 'string',
-                'comment_date'         => DateTimezoneCast::class,
-                'comment_date_gmt'     => DateTimezoneCast::class,
+                'comment_date'         => 'datetime',
+                'comment_date_gmt'     => 'datetime',
                 'comment_karma'        => 'boolean',
                 'comment_approved'     => 'boolean',
                 'comment_agent'        => 'string',
