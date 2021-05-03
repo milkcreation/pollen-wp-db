@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pollen\WpDb;
 
-use Pollen\Support\StaticProxy;
+use Pollen\Support\ProxyResolver;
 use RuntimeException;
 
 /**
@@ -29,7 +29,7 @@ trait WpDbProxy
             try {
                 $this->wpDb = WpDb::getInstance();
             } catch (RuntimeException $e) {
-                $this->wpDb = StaticProxy::getProxyInstance(
+                $this->wpDb = ProxyResolver::getInstance(
                     WpDbInterface::class,
                     WpDb::class,
                     method_exists($this, 'getContainer') ? $this->getContainer() : null
