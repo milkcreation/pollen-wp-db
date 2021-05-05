@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Pollen\WpDb\Eloquent\Scopes\PostTypeScope;
+use Pollen\WpDb\Eloquent\Concerns\MetaAwareTrait;
 
 /**
  * @property-read int $ID
@@ -49,6 +50,8 @@ use Pollen\WpDb\Eloquent\Scopes\PostTypeScope;
  */
 class Post extends AbstractModel
 {
+    use MetaAwareTrait;
+
     /**
      * Contrainte de type(s) de post.
      * @var string|string[]
