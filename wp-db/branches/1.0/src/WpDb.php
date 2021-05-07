@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pollen\WpDb;
 
+use InvalidArgumentException;
 use Pollen\Support\Concerns\BootableTrait;
 use Pollen\Support\Concerns\ConfigBagAwareTrait;
 use Pollen\Support\Exception\ManagerRuntimeException;
@@ -11,7 +12,6 @@ use Pollen\Support\Env;
 use Pollen\Support\Proxy\ContainerProxy;
 use Pollen\Support\Proxy\DbProxy;
 use Psr\Container\ContainerInterface as Container;
-use RuntimeException;
 
 class WpDb implements WpDbInterface
 {
@@ -129,10 +129,13 @@ class WpDb implements WpDbInterface
                 'prefix'    => $this->getBasePrefix(),
             ];
 
-            if (!$this->db()->getConnection()) {
+            try {
+                $this->db()->getConnection();
+            } catch (InvalidArgumentException $e) {
                 $this->db()->addConnection($defaultConnection);
                 $this->db()->setAsGlobal();
             }
+
             $this->db()->bootEloquent();
 
             $this->db()->addConnection($defaultConnection, $this->mainConnexion());
