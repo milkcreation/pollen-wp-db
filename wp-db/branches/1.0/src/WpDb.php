@@ -150,6 +150,10 @@ class WpDb implements WpDbInterface
                 );
             }
 
+            if (is_multisite()) {
+                $this->db()->getConnection()->setTablePrefix($this->getBlogPrefix());
+            }
+
             $this->setBooted();
         }
 
@@ -174,12 +178,16 @@ class WpDb implements WpDbInterface
     }
 
     /**
-     * @param int $id
+     * @param int|null $id
      *
      * @return string
      */
-    protected function getBlogPrefix(int $id = 1): string
+    protected function getBlogPrefix(?int $id = null): string
     {
+        if ($id === null) {
+            $id = get_current_blog_id();
+        }
+
         if (0 === $id || 1 === $id) {
             return $this->getBasePrefix();
         }
