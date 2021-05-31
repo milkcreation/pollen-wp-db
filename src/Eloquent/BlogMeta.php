@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Pollen\WpDb\Eloquent;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Pollen\Database\Drivers\Laravel\Eloquent\Casts\TypeCast;
+use Pollen\Database\Eloquent\Casts\SerializedCast;
 use Pollen\WpDb\WpDbProxy;
 
 /**
@@ -34,7 +34,7 @@ class BlogMeta extends AbstractModel
                 'meta_id'    => 'integer',
                 'blog_id'    => 'integer',
                 'meta_key'   => 'string',
-                'meta_value' => TypeCast::class,
+                'meta_value' => SerializedCast::class,
             ],
             $this->casts
         );
