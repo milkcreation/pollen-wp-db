@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Pollen\WpDb\Eloquent;
 
-use Pollen\Database\Drivers\Laravel\Eloquent\Casts\TypeCast;
-use Pollen\Database\Drivers\Laravel\Eloquent\Casts\YesNoCast;
+use Pollen\Database\Eloquent\Casts\SerializedCast;
+use Pollen\Database\Eloquent\Casts\YesNoCast;
 use Pollen\WpDb\WpDbProxy;
 
 /**
@@ -31,7 +31,7 @@ class Option extends AbstractModel
             [
                 'option_id'    => 'integer',
                 'option_name'  => 'string',
-                'option_value' => TypeCast::class,
+                'option_value' => SerializedCast::class,
                 'autoload'     => YesNoCast::class,
             ],
             $this->casts
