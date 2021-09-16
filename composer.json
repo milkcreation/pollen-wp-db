@@ -1,7 +1,7 @@
 {
   "name": "pollen-solutions/wp-db",
-    "description": "Pollen Wordpress Db Component - Wordpress adapter for the Pollen Database Component.",
-  "homepage": "https://www.presstify.com/pollen-solutions/wp-db/",
+  "description": "Pollen Wordpress Db Component - Wordpress adapter for the Pollen Database Component.",
+  "homepage": "https://github.com/milkcreation/pollen-wp-db.git",
   "keywords": [
     "pollen-solutions",
     "component",
@@ -9,19 +9,12 @@
     "eloquent",
     "wordpress"
   ],
-  "time": "2021-05-31",
+  "time": "2021-09-16",
   "license": "MIT",
   "authors": [
     {
       "name": "Jordy Manner",
-      "email": "jordy@presstify.com",
-      "role": "Developper"
-    }
-  ],
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://composer.presstify.com/pollen-solutions/"
+      "email": "jordy@presstify.com"
     }
   ],
   "require": {
